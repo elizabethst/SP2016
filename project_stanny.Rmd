@@ -1,0 +1,73 @@
+---
+title: "Assignments BUS 430"
+author: "Elizabeth Stanny"
+output:
+  html_document:
+    toc: yes
+    theme: spacelab
+  revealjs::revealjs_presentation:
+    theme: night
+    incremental: true
+---
+
+
+# Asssigment 1
+
+## ASC Equity Method 
+
++ ABC holds 30% of the common stock of XYZ and determines that the investment should not be accounted for using the equity method because it does not have significant influence over the  operating and financial policies of the investee   
++ Which paragraph (Topic-Subtopic-Section-Paragraph) of the authoritative literature best describes the disclosures that ABC will need to make with respect to XYZ
+
+
+
+## ASC Consolidation Q1
+
++ ABC is a majority owner of XYZ
++ ABC doesn't know whether to consolidate XYZ because it has a fiscal year that ends on Dec 31 and XYZ has a fiscal year that ends on July 1   
++ Which paragraph (Topic-Subtopic-Section-Paragraph) of the authoritative literature best describes the disclosures that ABC will need to make with respect to XYZ
+
+
+# Assignment 2
+
++ Pick a company in the S&P 500 (not ExxonMobil) from the list posted [here](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies) that has Non-Controlling Interest.
++ Indicate the Ticker in your document.  Each group must select a different company.  
++         
+
+
+```{r  nci, echo=TRUE, message=FALSE, warnings=FALSE, eval=TRUE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+nci <- read_csv("https://www.quandl.com/api/v3/datasets/SEC/XOM_MinorityInterest_A.csv")
+equity <- read_csv("https://www.quandl.com/api/v3/datasets/SEC/XOM_STOCKHOLDERSEQUITY_A.csv")
+names(nci) <-c("FYE", "NCI") 
+names(equity) <-c("Date2", "ExxonMobil_Equity") 
+
+
+df <- 
+  bind_cols(nci, equity) %>%
+  select(FYE, NCI, ExxonMobil_Equity) %>%
+  mutate(NCI_m = NCI/1000000, ExxonMobil_Equity_m = ExxonMobil_Equity/1000000) %>%
+  select(-NCI, -ExxonMobil_Equity) 
+
+knitr::kable(df, format.args = list(big.mark = ","))
+
+df_p <-df %>% gather(Equity, Value, NCI_m:ExxonMobil_Equity_m)
+
+knitr::kable(df_p, format.args = list(big.mark = ","))
+
+
+df_p %>% ggplot(., aes(x=FYE)) +
+  geom_bar(aes(y = Value, fill = Equity ), position = "stack", stat = "identity") +
+  labs(x = NULL, y = "in millions", title = "Allocation of ExxonMobil's Equity")
+
+```
+
+
+
+
+
+
+
