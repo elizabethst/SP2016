@@ -29,9 +29,12 @@ output:
 
 # Assignment 2
 
-+ Pick a company in the S&P 500 (not ExxonMobil) from the list posted [here](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies) that has Non-Controlling Interest.
-+ Indicate the Ticker in your document.  Each group must select a different company.  
-+         
++ Pick a company in the S&P 500 (not ExxonMobil) from the list posted [here](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies) that has a Non-Controlling Interest
++ Indicate the Ticker in your document.  Each group must select a different company  
++ Download the non-controlling (NCI) and controlling interest values for equity
+    + Include a table with the Date, NCI, Controlling Equity and Total Equity amounts
+    + Include a stacked bar graph with NCI and Controlling Equity amounts
+
 
 
 ```{r  nci, echo=TRUE, message=FALSE, warnings=FALSE, eval=TRUE}
@@ -49,7 +52,9 @@ names(equity) <-c("Date2", "ExxonMobil_Equity")
 df <- 
   bind_cols(nci, equity) %>%
   select(FYE, NCI, ExxonMobil_Equity) %>%
-  mutate(NCI_m = NCI/1000000, ExxonMobil_Equity_m = ExxonMobil_Equity/1000000) %>%
+  mutate(NCI_m = NCI/1000000, 
+         ExxonMobil_Equity_m = ExxonMobil_Equity/1000000, 
+         Total_Equity = NCI_m + ExxonMobil_Equity_m) %>%
   select(-NCI, -ExxonMobil_Equity) 
 
 knitr::kable(df, format.args = list(big.mark = ","))
